@@ -7,6 +7,11 @@ puts "Hello Uni. #{ARGV[0]}"
 
 input = "#{input}/project.pbxproj" if !File.exists?(input) || File::ftype(input) == "directory"
 
+if !File.exists?(input)
+  STDERR.puts "Xcode project file not found in #{ARGV[0]}."
+  exit
+end
+
 f = open(input)
 f.each {|line| print line}
 f.close
