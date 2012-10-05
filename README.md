@@ -10,7 +10,17 @@ It helps you automate building process of Unity project.
 
 ## Usage
 
-TODO: Write usage instructions here
+### Basic
+
+    $ unigunkan /path/to/your/xcode/project/Unity-iPhone.xcodeproj
+    
+Please read the messages shown by this command.
+
+### Options
+
+To disable Retina 4 inch devices support,
+
+    $ unigunkan /path/to/project/Unity-iPhone.xcodeproj --disable-retina-4inch-support
 
 ## Contributing
 
