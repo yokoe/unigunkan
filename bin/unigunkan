@@ -29,6 +29,12 @@ if backup_confirmed != true
   exit
 end
 
+# create a backup
+STDOUT.puts "Creating a backup of project.pbxproj..."
+backup_filepath = input + ".backup" + Time.now.strftime("%Y%m%d%H%M%S")
+FileUtils.cp(input, backup_filepath)
+STDOUT.puts "A backup created -> #{backup_filepath}"
+
 f = open(input)
 f.each {|line| print line}
 f.close
