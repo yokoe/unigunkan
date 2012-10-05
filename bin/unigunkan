@@ -5,6 +5,8 @@ input = ARGV[0]
 
 puts "Hello Uni. #{ARGV[0]}"
 
+input = "#{input}/project.pbxproj" if !File.exists?(input) || File::ftype(input) == "directory"
+
 f = open(input)
 f.each {|line| print line}
 f.close
