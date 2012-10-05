@@ -1,18 +1,10 @@
 # Unigunkan
 
-TODO: Write a gem description
+Unigunkan is a command line xcode project file modifier tool. Designed for Unity based projects.
+
+It helps you automate building process of Unity project.
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'unigunkan'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
 
     $ gem install unigunkan
 
