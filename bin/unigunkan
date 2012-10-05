@@ -67,7 +67,7 @@ if disable_retina_4inch_support
 
   default_png_path = Pathname.new(input + "/../../Default-568h@2x.png").realpath
 
-  FileUtils.mv default_png_path, default_png_path + ".backup" + Time.now.strftime("%Y%m%d%H%M%S")
+  FileUtils.mv default_png_path, default_png_path.to_s + ".backup" + Time.now.strftime("%Y%m%d%H%M%S")
 end
 
 # delete the original
