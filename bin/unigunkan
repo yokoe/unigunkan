@@ -35,6 +35,16 @@ backup_filepath = input + ".backup" + Time.now.strftime("%Y%m%d%H%M%S")
 FileUtils.cp(input, backup_filepath)
 STDOUT.puts "A backup created -> #{backup_filepath}"
 
+# read the original
+src = ""
 f = open(input)
-f.each {|line| print line}
+src = f.read
 f.close
+
+# delete the original
+FileUtils.rm input
+
+# write to project.pbxproj
+open(input, "w") {|f|
+  f.puts src
+}
