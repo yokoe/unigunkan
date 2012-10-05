@@ -19,7 +19,7 @@ input = "#{input}/project.pbxproj" if !File.exists?(input) || File::ftype(input)
 
 if !File.exists?(input)
   STDERR.puts "Xcode project file not found in #{ARGV[0]}."
-  exit
+  exit false
 end
 
 if backup_confirmed != true
@@ -28,7 +28,7 @@ if backup_confirmed != true
   STDERR.puts "If the project was broken, delete project.pbxproj and restore from a backup."
   STDERR.puts " "
   STDERR.puts "OK? Then append '-y' and run again. `unigunkan #{ARGV.join(' ')} -y`"
-  exit
+  exit false
 end
 
 # create a backup
