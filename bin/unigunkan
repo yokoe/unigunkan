@@ -1,4 +1,10 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-puts "Hello Uni."
+input = ARGV[0]
+
+puts "Hello Uni. #{ARGV[0]}"
+
+f = open(input)
+f.each {|line| print line}
+f.close
