@@ -1,7 +1,15 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+require 'optparse'
+opt = OptionParser.new
+
+OPTS = {}
+opt.on('-y') {|v| OPTS[:y] = v }
+opt.parse!(ARGV)
+
 input = ARGV[0]
+backup_confirmed = OPTS[:y]
 
 puts "Hello Uni. #{ARGV[0]}"
 
@@ -9,6 +17,15 @@ input = "#{input}/project.pbxproj" if !File.exists?(input) || File::ftype(input)
 
 if !File.exists?(input)
   STDERR.puts "Xcode project file not found in #{ARGV[0]}."
+  exit
+end
+
+if backup_confirmed != true
+  STDERR.puts "Caution: Project file might be broken using this script."
+  STDERR.puts "This script makes a copy of original project.pbxproj as project.pbxproj.backup{date}."
+  STDERR.puts "If the project was broken, delete project.pbxproj and restore from a backup."
+  STDERR.puts " "
+  STDERR.puts "OK? Then append '-y' and run again. `unigunkan #{ARGV.join(' ')} -y`"
   exit
 end
 
