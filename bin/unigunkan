@@ -62,6 +62,10 @@ if disable_retina_4inch_support
   else
     STDOUT.puts "Default-568h@2x.png not found in this project. No lines removed."
   end
+
+  default_png_path = Pathname.new(input + "/../../Default-568h@2x.png").realpath
+
+  FileUtils.mv default_png_path, default_png_path + ".backup" + Time.now.strftime("%Y%m%d%H%M%S")
 end
 
 # delete the original
