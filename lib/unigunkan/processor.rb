@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'pathname'
+require 'securerandom'
 
 class Unigunkan::Processor
   def initialize(proj_file, opts)
@@ -47,6 +48,26 @@ class Unigunkan::Processor
     end
 
     @src = src
+  end
+
+  def add_folder_refs
+    if OPTS[:folder_refs].nil?
+      return
+    end
+
+    folders = OPTS[:folder_refs].split(",")
+
+    STDOUT.puts "Adding folder refs..."
+    file_refs_to_add = []
+    build_files_to_add = []
+    for folder in folders
+      file_ref = SecureRandom.hex
+      build_file = SecureRandom.hex
+      file_refs_to_add << "#{file_ref} /* #{folder} */ = {isa = PBXFileReference; lastKnownFileType = folder; path = #{folder}; sourceTree = \"<group>\"; };"
+      build_files_to_add << "#{build_file} /* #{folder} in Resources */ = {isa = PBXBuildFile; fileRef = #{file_ref} /* #{folder} */; };"
+    end
+    puts build_files_to_add.join("\n")
+    puts file_refs_to_add.join("\n")
   end
 
   def delete_original_project_file

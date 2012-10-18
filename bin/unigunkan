@@ -8,6 +8,7 @@ opt = OptionParser.new
 OPTS = {}
 opt.on('-y') {|v| OPTS[:y] = v }
 opt.on('--disable-retina-4inch-support') {|v| OPTS[:disable_retina_4inch_support] = v}
+opt.on('--folder-refs VAL') {|v| OPTS[:folder_refs] = v}
 opt.parse!(ARGV)
 
 input = ARGV[0]
@@ -40,5 +41,7 @@ end
 processor = Unigunkan::Processor.new(input, OPTS)
 processor.create_backup
 processor.disable_retina_4inch_support if disable_retina_4inch_support
+processor.add_folder_refs
+
 processor.delete_original_project_file
 processor.write
