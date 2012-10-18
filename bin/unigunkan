@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-require 'fileutils'
-require 'pathname'
 require 'optparse'
 require 'unigunkan'
 opt = OptionParser.new
@@ -41,23 +39,6 @@ end
 
 processor = Unigunkan::Processor.new(input, OPTS)
 processor.create_backup
-
-# read the original
-src = ""
-f = open(input)
-src = f.read
-f.close
-
-# Disable iphone5 support
-# (Remove lines which include 'Default-568h@2x.png'.)
-if disable_retina_4inch_support
-  src = processor.disable_retina_4inch_support(src)
-end
-
-# delete the original
-FileUtils.rm input
-
-# write to project.pbxproj
-open(input, "w") {|f|
-  f.puts src
-}
+processor.disable_retina_4inch_support if disable_retina_4inch_support
+processor.delete_original_project_file
+processor.write

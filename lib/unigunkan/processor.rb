@@ -1,9 +1,14 @@
+require 'fileutils'
 require 'pathname'
 
 class Unigunkan::Processor
   def initialize(proj_file, opts)
     @proj_file = proj_file
     @opts = opts
+
+    f = open(@proj_file)
+    @src = f.read
+    f.close
   end
 
   def create_backup
@@ -13,7 +18,10 @@ class Unigunkan::Processor
     STDOUT.puts "A backup created -> #{backup_filepath}"
   end
 
-  def disable_retina_4inch_support(src)
+  # Disable iphone5 support
+  # (Remove lines which include 'Default-568h@2x.png'.)
+  def disable_retina_4inch_support
+    src = @src
     STDOUT.puts "Disabling Retina 4inch support..."
     dst = src.split("\n")
     src = ""
@@ -38,6 +46,16 @@ class Unigunkan::Processor
       STDOUT.puts "Warning: No Default-568h@2x.png found."
     end
 
-    return dst
+    @src = src
+  end
+
+  def delete_original_project_file
+    FileUtils.rm @proj_file
+  end
+
+  def write
+    open(@proj_file, "w") {|f|
+      f.puts @src
+    }
   end
 end
