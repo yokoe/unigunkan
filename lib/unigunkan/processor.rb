@@ -1,0 +1,2 @@
+class Unigunkan::Processor
+end
