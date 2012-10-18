@@ -39,7 +39,7 @@ if backup_confirmed != true
   exit false
 end
 
-processor = Unigunkan::Processor.new(input)
+processor = Unigunkan::Processor.new(input, OPTS)
 processor.create_backup
 
 # read the original
@@ -51,26 +51,7 @@ f.close
 # Disable iphone5 support
 # (Remove lines which include 'Default-568h@2x.png'.)
 if disable_retina_4inch_support
-  STDOUT.puts "Disabling Retina 4inch support..."
-  dst = src.split("\n")
-  src = ""
-  lines_removed = 0
-  for line in dst
-    if line.index("Default-568h@2x.png") == nil
-      src += "#{line}\n"
-    else
-      lines_removed += 1
-    end
-  end
-  if lines_removed > 0
-    STDOUT.puts "#{lines_removed} lines removed."
-  else
-    STDOUT.puts "Default-568h@2x.png not found in this project. No lines removed."
-  end
-
-  default_png_path = Pathname.new(input + "/../../Default-568h@2x.png").realpath
-
-  FileUtils.mv default_png_path, default_png_path.to_s + ".backup" + Time.now.strftime("%Y%m%d%H%M%S")
+  src = processor.disable_retina_4inch_support(src)
 end
 
 # delete the original
