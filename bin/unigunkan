@@ -4,6 +4,7 @@
 require 'fileutils'
 require 'pathname'
 require 'optparse'
+require 'unigunkan'
 opt = OptionParser.new
 
 OPTS = {}
@@ -14,6 +15,11 @@ opt.parse!(ARGV)
 input = ARGV[0]
 backup_confirmed = OPTS[:y]
 disable_retina_4inch_support = OPTS[:disable_retina_4inch_support]
+
+if input.nil?
+  STDERR.puts "No input file."
+  exit false
+end
 
 puts "Hello Uni. #{ARGV[0]}"
 
@@ -33,11 +39,8 @@ if backup_confirmed != true
   exit false
 end
 
-# create a backup
-STDOUT.puts "Creating a backup of project.pbxproj..."
-backup_filepath = input + ".backup" + Time.now.strftime("%Y%m%d%H%M%S")
-FileUtils.cp(input, backup_filepath)
-STDOUT.puts "A backup created -> #{backup_filepath}"
+processor = Unigunkan::Processor.new(input)
+processor.create_backup
 
 # read the original
 src = ""
