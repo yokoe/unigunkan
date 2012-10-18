@@ -22,6 +22,10 @@ To disable Retina 4 inch devices support,
 
     $ unigunkan /path/to/project/Unity-iPhone.xcodeproj --disable-retina-4inch-support
 
+Add folder references,
+
+    $ unigunkan /path/to/project/Unity-iPhone.xcodeproj --folder-refs=../../assetbundles
+
 ## Contributing
 
 1. Fork it
