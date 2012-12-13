@@ -11,7 +11,7 @@ class Modifier
     target = /Frameworks \*\/ = {\n\t\t\tisa = PBXFrameworksBuildPhase;\n\t\t\tbuildActionMask = (.*?);\n\t\t\tfiles = \(/
     mask = src.scan(target)[0][0]
     build_phases = "Frameworks */ = {\n\t\t\tisa = PBXFrameworksBuildPhase;\n\t\t\tbuildActionMask = #{mask};\n\t\t\tfiles = (\n"
-    return src.gsub(target, build_phases + files)
+    return src.gsub(target, build_phases + files + ",")
   end
 
   def self.add_block_after(src, line, block)

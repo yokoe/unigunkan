@@ -2,7 +2,7 @@ class FileRef
   attr_accessor :id, :name, :last_known_type, :path, :source_tree
 
   def initialize(hash)
-    @id = SecureRandom.hex(8)
+    @id = SecureRandom.hex(12)
     @name = hash[:name]
     @last_known_type = hash[:last_known_type]
     @path = hash[:path]
@@ -19,6 +19,11 @@ class FileRef
 
   def group
     FileRef.file_group(self.name)
+  end
+
+  def build_file
+    @build_file = BuildFile.new(self) if !@build_file
+    return @build_file
   end
 
   def self.file_group(filename)

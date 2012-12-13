@@ -2,7 +2,7 @@ class BuildFile
   attr_accessor :id
 
   def initialize(fileref)
-    @id = SecureRandom.hex(8)
+    @id = SecureRandom.hex(12)
     @fileref = fileref
   end
 
