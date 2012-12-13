@@ -1,5 +1,5 @@
 class FileRef
-  attr_accessor :id, :name, :last_known_type, :path, :source_tree
+  attr_accessor :id, :name, :last_known_type, :path, :source_tree, :file_encoding
 
   def initialize(hash)
     @id = SecureRandom.hex(12)
@@ -7,12 +7,16 @@ class FileRef
     @last_known_type = hash[:last_known_type]
     @path = hash[:path]
     @source_tree = hash[:source_tree]
+    @file_encoding = hash[:file_encoding]
   end
 
   def fields
     last_known_type = @last_known_type
     last_known_type = "\"#{last_known_type}\"" if last_known_type == "compiled.mach-o.dylib"
-    ["isa = PBXFileReference", "lastKnownType = #{last_known_type}", "name = #{@name}", "path = #{@path}", "sourceTree = #{@source_tree}"].map{|a| "#{a};"}.join(" ")
+
+    elements = ["isa = PBXFileReference", "lastKnownType = #{last_known_type}", "name = #{@name}", "path = #{@path}", "sourceTree = #{@source_tree}"]
+    elements << "fileEncoding = #{@file_encoding}" if @file_encoding
+    elements.map{|a| "#{a};"}.join(" ")
   end
 
   def key

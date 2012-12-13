@@ -123,10 +123,17 @@ class Unigunkan::Processor
     end
   end
 
+  def add_header(file, path)
+    fileref = FileRef.new({name: file, last_known_type: "sourcecode.c.h", path: "#{path}/#{file}", source_tree: "\"<absolute>\"", file_encoding: 4})
+    @src = Modifier.add_file_ref(@src, fileref.to_s)
+    @src = Modifier.add_file_to_tree(@src, fileref.key + ",")
+  end
+
   def integrate_testflight_sdk(sdk_path, token)
     puts "Integrate TestFlight SDK #{sdk_path}, #{token}"
     link_library "libz.dylib", "usr/lib/libz.dylib"
-    link_library "libTestFlight.a", "#{sdk_path}"
+    link_library "libTestFlight.a", sdk_path
+    add_header "TestFlight.h", sdk_path
   end
 
   def add_block_after(line, block)
