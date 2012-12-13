@@ -21,14 +21,25 @@ describe Modifier do
     /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+    19C7BC9D1679ECA000282DD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SYViewController.xib; sourceTree = "<group>"; };
+    19C7BCA41679ECAE00282DD7 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 EOS
 
 
-  it "Should be ok" do
-    ret = Modifier.add_build_files(src, "[added]")
+  it "should add buildfile" do
+    ret = Modifier.add_build_files(src, "[buildfile]")
     expected = <<EOS
 /* Begin PBXBuildFile section */
-[added]
+[buildfile]
+EOS
+    ret.index(expected).should_not be_nil
+  end
+
+  it "should add fileref" do
+    ret = Modifier.add_file_ref(src, "[fileref]")
+    expected = <<EOS
+/* Begin PBXFileReference section */
+[fileref]
 EOS
     ret.index(expected).should_not be_nil
   end

@@ -6,7 +6,10 @@ class BuildFile
     @fileref = fileref
   end
 
+  def key
+    "#{@id} /* #{@fileref.name} in #{@fileref.group} */"
+  end
   def to_s
-    "#{@id} /* #{@fileref.name} */ = {isa = PBXBuildFile; fileRef = #{@fileref.id} /* #{@fileref.name} */; };"
+    "#{self.key} = {isa = PBXBuildFile; fileRef = #{@fileref.id} /* #{@fileref.name} */; };"
   end
 end

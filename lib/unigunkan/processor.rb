@@ -104,35 +104,9 @@ class Unigunkan::Processor
   end
 
   def link_library(library, path)
+    fileref = FileRef.new({name: library, last_known_type: "compiled.mach-o.dylib", path: path, source_tree: :SDKROOT})
     if library.end_with?(".dylib")
-      framework = {:name => library, :uuid => new_uuid, :fileref => new_uuid, :path => path, :last_known_type => "compiled.mach-o.dylib", :source_tree => "SDKROOT"}
-
-      # file refs
-      fw_name = framework[:name]
-      fileref = framework[:fileref]
-      path = framework[:path]
-      uuid = framework[:uuid]
-      last_known_type = framework[:last_known_type]
-      source_tree = framework[:source_tree]
-      
-      # file refs
-      file_info = "isa = PBXFileReference; lastKnownFileType = #{last_known_type}; name = #{fw_name}; path = #{path}; sourceTree = #{source_tree}; "
-      file_refs_to_add << "#{fileref} /* #{fw_name} */ = {#{file_info}};"
-      
-      # build files
-      file_info = "isa = PBXBuildFile; fileRef = #{fileref} /* #{fw_name} */; settings = {ATTRIBUTES = (Weak, ); }; "
-      build_files_to_add << "#{uuid} /* #{fw_name} in Frameworks */ = {#{file_info}};"
-      
-      # build phases
-      build_phases_to_add << "\t\t\t\t#{uuid} /* #{fw_name} */,"
-      if fw_name.end_with?(".a")
-        path_components = path.split("/")
-        path_components.pop
-        library_search_paths << "$(SRCROOT)/../#{path_components.join("/")}"
-      end
-      
-      # file groups (tree)
-      files_in_group_to_add << "\t\t\t\t#{fileref} /* #{fw_name} */,"
+      @src = Modifier.add_build_files(fileref.build_file.to_s)
     else
       puts "Unsupported: #{library}"
     end

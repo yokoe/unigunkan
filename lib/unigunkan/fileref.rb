@@ -17,6 +17,10 @@ class FileRef
     "#{@id} /* #{@name} */ = {#{self.fields}};"
   end
 
+  def group
+    FileRef.file_group(self.name)
+  end
+
   def self.file_group(filename)
     ext = filename.split(".").last
     case ext
