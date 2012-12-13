@@ -9,6 +9,9 @@ OPTS = {}
 opt.on('-y') {|v| OPTS[:y] = v }
 opt.on('--disable-retina-4inch-support') {|v| OPTS[:disable_retina_4inch_support] = v}
 opt.on('--folder-refs VAL') {|v| OPTS[:folder_refs] = v}
+opt.on('--integrate-testflight-sdk') {|v| OPTS[:integrate_testflight_sdk] = v}
+opt.on('--testflight-sdk VAL') {|v| OPTS[:testflight_sdk] = v}
+opt.on('--testflight-application-token VAL') {|v| OPTS[:testflight_application_token] = v}
 opt.parse!(ARGV)
 
 input = ARGV[0]
@@ -19,8 +22,6 @@ if input.nil?
   STDERR.puts "No input file."
   exit false
 end
-
-puts "Hello Uni. #{ARGV[0]}"
 
 input = "#{input}/project.pbxproj" if !File.exists?(input) || File::ftype(input) == "directory"
 
@@ -36,6 +37,15 @@ if backup_confirmed != true
   STDERR.puts " "
   STDERR.puts "OK? Then append '-y' and run again. `unigunkan #{ARGV.join(' ')} -y`"
   exit false
+end
+
+if OPTS[:integrate_testflight_sdk] == true
+  if OPTS[:testflight_sdk] == nil || OPTS[:testflight_application_token]
+    STDERR.puts "To integrate testflight sdk, please set params below."
+    STDERR.puts "--testflight-sdk /path/to/sdk"
+    STDERR.puts "--testflight_application_token 123456"
+    exit false
+  end
 end
 
 processor = Unigunkan::Processor.new(input, OPTS)
