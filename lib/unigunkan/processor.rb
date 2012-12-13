@@ -104,11 +104,20 @@ class Unigunkan::Processor
   end
 
   def link_library(library, path)
-    fileref = FileRef.new({name: library, last_known_type: "compiled.mach-o.dylib", path: path, source_tree: :SDKROOT})
-    if library.end_with?(".dylib")
+    case library.split(".").last
+    when "dylib"
+      fileref = FileRef.new({name: library, last_known_type: "compiled.mach-o.dylib", path: path, source_tree: :SDKROOT})
       @src = Modifier.add_build_files(@src, fileref.build_file.to_s)
       @src = Modifier.add_file_ref(@src, fileref.to_s)
       @src = Modifier.add_framework_build_phase(@src, fileref.build_file.key)
+      @src = Modifier.add_file_to_tree(@src, fileref.key + ",")
+    when "a"
+      fileref = FileRef.new({name: library, last_known_type: "archive.ar", path: "#{path}/#{library}", source_tree: "\"<group>\""})
+      @src = Modifier.add_build_files(@src, fileref.build_file.to_s)
+      @src = Modifier.add_file_ref(@src, fileref.to_s)
+      @src = Modifier.add_framework_build_phase(@src, fileref.build_file.key)
+      @src = Modifier.add_library_search_paths(@src, "\"\\\"#{path}\\\"\",")
+      @src = Modifier.add_file_to_tree(@src, fileref.key + ",")
     else
       puts "Unsupported: #{library}"
     end
@@ -117,6 +126,7 @@ class Unigunkan::Processor
   def integrate_testflight_sdk(sdk_path, token)
     puts "Integrate TestFlight SDK #{sdk_path}, #{token}"
     link_library "libz.dylib", "usr/lib/libz.dylib"
+    link_library "libTestFlight.a", "#{sdk_path}"
   end
 
   def add_block_after(line, block)

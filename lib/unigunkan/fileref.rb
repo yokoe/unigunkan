@@ -10,11 +10,17 @@ class FileRef
   end
 
   def fields
-    ["isa = PBXFileReference", "lastKnownType = \"#{@last_known_type}\"", "name = #{@name}", "path = #{@path}", "sourceTree = #{@source_tree}"].map{|a| "#{a};"}.join(" ")
+    last_known_type = @last_known_type
+    last_known_type = "\"#{last_known_type}\"" if last_known_type == "compiled.mach-o.dylib"
+    ["isa = PBXFileReference", "lastKnownType = #{last_known_type}", "name = #{@name}", "path = #{@path}", "sourceTree = #{@source_tree}"].map{|a| "#{a};"}.join(" ")
+  end
+
+  def key
+    "#{@id} /* #{@name} */"
   end
 
   def to_s
-    "#{@id} /* #{@name} */ = {#{self.fields}};"
+    "#{self.key} = {#{self.fields}};"
   end
 
   def group
