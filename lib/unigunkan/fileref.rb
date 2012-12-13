@@ -1,9 +1,8 @@
 class FileRef
-  attr_accessor :id, :name, :isa,  :last_known_type, :path, :source_tree
+  attr_accessor :id, :name, :last_known_type, :path, :source_tree
 
   def initialize(hash)
     @id = SecureRandom.hex(8)
-    @isa = :PBXFileReference
     @name = hash[:name]
     @last_known_type = hash[:last_known_type]
     @path = hash[:path]
@@ -11,10 +10,18 @@ class FileRef
   end
 
   def fields
-    ["isa = #{@isa}", "lastKnownType = \"#{@last_known_type}\"", "name = #{@name}", "path = #{@path}", "sourceTree = #{@source_tree}"].join("; ")
+    ["isa = PBXFileReference", "lastKnownType = \"#{@last_known_type}\"", "name = #{@name}", "path = #{@path}", "sourceTree = #{@source_tree}"].map{|a| "#{a};"}.join(" ")
   end
 
   def to_s
     "#{@id} /* #{@name} */ = {#{self.fields}};"
+  end
+
+  def self.file_group(filename)
+    ext = filename.split(".").last
+    case ext
+    when "dylib"
+      return "Frameworks"
+    end
   end
 end
