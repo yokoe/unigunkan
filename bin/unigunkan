@@ -40,10 +40,10 @@ if backup_confirmed != true
 end
 
 if OPTS[:integrate_testflight_sdk] == true
-  if OPTS[:testflight_sdk] == nil || OPTS[:testflight_application_token]
+  if OPTS[:testflight_sdk] == nil || OPTS[:testflight_application_token] == nil
     STDERR.puts "To integrate testflight sdk, please set params below."
     STDERR.puts "--testflight-sdk /path/to/sdk"
-    STDERR.puts "--testflight_application_token 123456"
+    STDERR.puts "--testflight-application-token 123456"
     exit false
   end
 end
@@ -52,6 +52,10 @@ processor = Unigunkan::Processor.new(input, OPTS)
 processor.create_backup
 processor.disable_retina_4inch_support if disable_retina_4inch_support
 processor.add_folder_refs
+
+if OPTS[:integrate_testflight_sdk] == true
+  processor.integrate_testflight_sdk OPTS[:testflight_sdk], OPTS[:testflight_application_token]
+end
 
 processor.delete_original_project_file
 processor.write
