@@ -25,6 +25,14 @@ To disable Retina 4 inch devices support,
 Add folder references,
 
     $ unigunkan /path/to/project/Unity-iPhone.xcodeproj --folder-refs=../../assetbundles
+    
+#### TestFlight SDK Integration
+
+1. Download the latest TestFlightSDK.
+2. Get the application token
+3. Add --integrate-testflight-sdk option.
+
+    $ unigunkan /path/to/project/Unity-iPhone.xcodeproj --integrate-testflight-sdk --testflight-sdk ~/Downloads/testflight --testflight-application-token 12345-abc-123
 
 ## Contributing
 
