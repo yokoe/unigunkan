@@ -134,6 +134,20 @@ class Unigunkan::Processor
     link_library "libz.dylib", "usr/lib/libz.dylib"
     link_library "libTestFlight.a", sdk_path
     add_header "TestFlight.h", sdk_path
+
+    # Import TestFlight.h in the precompiled header
+    pch_file = File.expand_path(@proj_file + "/../../Classes/iPhone_target_Prefix.pch")
+    pch = File.read(pch_file)
+    pch.gsub!("#ifdef __OBJC__","#ifdef __OBJC__\n#import \"TestFlight.h\"")
+    File.write(pch_file, pch)
+
+    # Insert some codes in AppController
+    app_controller_file = File.expand_path(@proj_file + "/../../Classes/AppController.mm")
+    app_controller = File.read(app_controller_file)
+    target = "- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions\n{"
+
+    app_controller.gsub!(target, target + "\n[TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];[TestFlight takeOff:@\"#{token}\"];")
+    File.write(app_controller_file, app_controller)
   end
 
   def add_block_after(line, block)
