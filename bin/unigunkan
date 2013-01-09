@@ -13,6 +13,7 @@ opt.on('--integrate-testflight-sdk') {|v| OPTS[:integrate_testflight_sdk] = v}
 opt.on('--testflight-sdk VAL') {|v| OPTS[:testflight_sdk] = v}
 opt.on('--testflight-application-token VAL') {|v| OPTS[:testflight_application_token] = v}
 opt.on('--testflight-enable-remote-logging') {|v| OPTS[:testflight_enable_remote_logging] = v}
+opt.on('--enable-objc-exceptions') {|v| OPTS[:enable_objc_exceptions] = v}
 opt.parse!(ARGV)
 
 input = ARGV[0]
@@ -52,6 +53,7 @@ end
 processor = Unigunkan::Processor.new(input, OPTS)
 processor.create_backup
 processor.disable_retina_4inch_support if disable_retina_4inch_support
+processor.enable_objc_exceptions if OPTS[:enable_objc_exceptions]
 processor.add_folder_refs
 
 if OPTS[:integrate_testflight_sdk] == true

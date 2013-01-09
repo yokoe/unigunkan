@@ -152,6 +152,10 @@ class Unigunkan::Processor
     File.write(app_controller_file, app_controller)
   end
 
+  def enable_objc_exceptions
+    add_block_after "buildSettings = {", "GCC_ENABLE_OBJC_EXCEPTIONS = YES;"
+  end
+
   def add_block_after(line, block)
     @src.gsub!(line, line + "\n" + block)
   end
