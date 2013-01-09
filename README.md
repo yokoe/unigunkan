@@ -36,6 +36,14 @@ Add folder references,
     $ unigunkan /path/to/project/Unity-iPhone.xcodeproj --integrate-testflight-sdk\
         --testflight-sdk ~/Downloads/testflight --testflight-application-token 12345-abc-123
 ````
+
+To enable remote logging, specify `--testflight-enable-remote-logging`
+
+````
+    $ unigunkan /path/to/project/Unity-iPhone.xcodeproj --integrate-testflight-sdk\
+        --testflight-sdk ~/Downloads/testflight --testflight-application-token 12345-abc-123
+        --testflight-enable-remote-logging
+````
     
 ## Contributing
 
