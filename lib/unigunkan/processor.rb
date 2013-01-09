@@ -129,7 +129,7 @@ class Unigunkan::Processor
     @src = Modifier.add_file_to_tree(@src, fileref.key + ",")
   end
 
-  def integrate_testflight_sdk(sdk_path, token)
+  def integrate_testflight_sdk(sdk_path, token, enable_remote_logging = false)
     puts "Integrate TestFlight SDK #{sdk_path}, #{token}"
     link_library "libz.dylib", "usr/lib/libz.dylib"
     link_library "libTestFlight.a", sdk_path
@@ -138,7 +138,9 @@ class Unigunkan::Processor
     # Import TestFlight.h in the precompiled header
     pch_file = File.expand_path(@proj_file + "/../../Classes/iPhone_target_Prefix.pch")
     pch = File.read(pch_file)
-    pch.gsub!("#ifdef __OBJC__","#ifdef __OBJC__\n#import \"TestFlight.h\"")
+    header_to_import = "#ifdef __OBJC__\n#import \"TestFlight.h\""
+    header_to_import += "\n#define NSLog TFLog" if enable_remote_logging
+    pch.gsub!("#ifdef __OBJC__", header_to_import)
     File.write(pch_file, pch)
 
     # Insert some codes in AppController

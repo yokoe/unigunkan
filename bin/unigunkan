@@ -12,6 +12,7 @@ opt.on('--folder-refs VAL') {|v| OPTS[:folder_refs] = v}
 opt.on('--integrate-testflight-sdk') {|v| OPTS[:integrate_testflight_sdk] = v}
 opt.on('--testflight-sdk VAL') {|v| OPTS[:testflight_sdk] = v}
 opt.on('--testflight-application-token VAL') {|v| OPTS[:testflight_application_token] = v}
+opt.on('--testflight-enable-remote-logging') {|v| OPTS[:testflight_enable_remote_logging] = v}
 opt.parse!(ARGV)
 
 input = ARGV[0]
@@ -54,7 +55,7 @@ processor.disable_retina_4inch_support if disable_retina_4inch_support
 processor.add_folder_refs
 
 if OPTS[:integrate_testflight_sdk] == true
-  processor.integrate_testflight_sdk OPTS[:testflight_sdk], OPTS[:testflight_application_token]
+  processor.integrate_testflight_sdk OPTS[:testflight_sdk], OPTS[:testflight_application_token], OPTS[:testflight_enable_remote_logging]
 end
 
 processor.delete_original_project_file
