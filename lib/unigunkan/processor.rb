@@ -181,6 +181,7 @@ class Unigunkan::Processor
 
     Modifier.add_shell_script(@src, shell_script, new_uuid)
 
+    # Insert framework search path
     add_block_after "buildSettings = {", "FRAMEWORK_SEARCH_PATHS = #{sdk_path};"
   end
 
