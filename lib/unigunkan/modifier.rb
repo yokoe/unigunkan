@@ -31,4 +31,9 @@ class Modifier
   def self.add_block_after(src, line, block)
     src.gsub(line, line + "\n" + block)
   end
+
+  def self.add_shell_script(src, file)
+    target = "/* Begin PBXShellScriptBuildPhase section */\n"
+    return file.gsub!(target, target + src)
+  end
 end
