@@ -118,6 +118,13 @@ class Unigunkan::Processor
       @src = Modifier.add_framework_build_phase(@src, fileref.build_file.key)
       @src = Modifier.add_library_search_paths(@src, "\"\\\"#{path}\\\"\",")
       @src = Modifier.add_file_to_tree(@src, fileref.key + ",")
+    when "framework"
+      fileref = FileRef.new({name: library, last_known_type: "wrapper.framework", path: "#{path}/#{library}", source_tree: "\"<group>\""})
+      @src = Modifier.add_build_files(@src, fileref.build_file.to_s)
+      @src = Modifier.add_file_ref(@src, fileref.to_s)
+      @src = Modifier.add_framework_build_phase(@src, fileref.build_file.key)
+      @src = Modifier.add_library_search_paths(@src, "\"\\\"#{path}\\\"\",")
+      @src = Modifier.add_file_to_tree(@src, fileref.key + ",")
     else
       puts "Unsupported: #{library}"
     end
@@ -150,6 +157,35 @@ class Unigunkan::Processor
 
     app_controller.gsub!(target, target + "\n[TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];[TestFlight takeOff:@\"#{token}\"];")
     File.write(app_controller_file, app_controller)
+  end
+
+  def integrate_crashlytics_sdk(sdk_path, token)
+    puts "Integrate Crashlytics SDK #{sdk_path}, #{token}"
+    link_library "Crashlytics.framework", sdk_path
+
+    # Insert header in AppController
+    app_controller_file = File.expand_path(@proj_file + "/../../Classes/AppController.mm")
+    app_controller = File.read(app_controller_file)
+
+    target = "#import \"AppController.h\""
+    app_controller.gsub!(target, target + "\n#import <Crashlytics/Crashlytics.h>")
+
+    # Insert some codes in AppController
+    target = "- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions\n{"
+    app_controller.gsub!(target, target + "\n[Crashlytics startWithAPIKey:@\"#{token}\"];\n")
+
+    File.write(app_controller_file, app_controller)
+
+    # Insert build script
+    shell_script = "#{sdk_path}/Crashlytics.framework/run #{token}"
+
+    Modifier.add_shell_script(@src, shell_script, new_uuid)
+
+    # Insert framework search path
+    add_block_after "buildSettings = {", "FRAMEWORK_SEARCH_PATHS = #{sdk_path};"
+
+    # Modify debug infomation format
+    @src.gsub!("DEBUG_INFORMATION_FORMAT = dwarf;", "DEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";")
   end
 
   def enable_objc_exceptions
