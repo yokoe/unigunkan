@@ -159,6 +159,35 @@ class Unigunkan::Processor
     File.write(app_controller_file, app_controller)
   end
 
+  def integrate_crashlytics_sdk(sdk_path, token)
+    puts "Integrate Crashlytics SDK #{sdk_path}, #{token}"
+    link_library "Crashlytics.framework", sdk_path
+
+    # Insert header in AppController
+    app_controller_file = File.expand_path(@proj_file + "/../../Classes/AppController.mm")
+    app_controller = File.read(app_controller_file)
+
+    target = "#import \"AppController.h\""
+    app_controller.gsub!(target, target + "\n#import <Crashlytics/Crashlytics.h>")
+
+    # Insert some codes in AppController
+    target = "- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions\n{"
+    app_controller.gsub!(target, target + "\n[Crashlytics startWithAPIKey:@\"#{token}\"];\n")
+
+    File.write(app_controller_file, app_controller)
+
+    # Insert build script
+    shell_script_uuid = new_uuid
+    shell_script = shell_script_uuid + " /* ShellScript */ = {\nisa = PBXShellScriptBuildPhase;\nbuildActionMask = 2147483647;\nfiles = (\n);\ninputPaths = (\n);\noutputPaths = (\n);\nrunOnlyForDeploymentPostprocessing = 0;\nshellPath = /bin/sh;\nshellScript = \"../../Frameworks/Crashlytics.framework/run #{token}\";\n};\n"
+    Modifier.add_shell_script(shell_script, @src)
+
+    target = " /* Frameworks */,\n\t\t\t);"
+    build_phases = " /* Frameworks */,\n\t\t\t" + shell_script_uuid + " /* ShellScript */,\n\t\t\t);"
+    @src.gsub!(target, build_phases)
+
+    add_block_after "buildSettings = {", "FRAMEWORK_SEARCH_PATHS = #{sdk_path};"
+  end
+
   def enable_objc_exceptions
     add_block_after "buildSettings = {", "GCC_ENABLE_OBJC_EXCEPTIONS = YES;"
   end
