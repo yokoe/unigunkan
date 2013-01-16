@@ -186,6 +186,9 @@ class Unigunkan::Processor
 
     # Modify debug infomation format
     @src.gsub!("DEBUG_INFORMATION_FORMAT = dwarf;", "DEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";")
+
+    # Modify generate debugging symbols
+    @src.gsub!("GCC_GENERATE_DEBUGGING_SYMBOLS = NO;", "GCC_GENERATE_DEBUGGING_SYMBOLS = YES;")
   end
 
   def enable_objc_exceptions
