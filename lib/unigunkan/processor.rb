@@ -183,6 +183,9 @@ class Unigunkan::Processor
 
     # Insert framework search path
     add_block_after "buildSettings = {", "FRAMEWORK_SEARCH_PATHS = #{sdk_path};"
+
+    # Modify debug infomation format
+    @src.gsub!("DEBUG_INFORMATION_FORMAT = dwarf;", "DEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";")
   end
 
   def enable_objc_exceptions
