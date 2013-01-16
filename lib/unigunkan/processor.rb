@@ -177,13 +177,9 @@ class Unigunkan::Processor
     File.write(app_controller_file, app_controller)
 
     # Insert build script
-    shell_script_uuid = new_uuid
-    shell_script = shell_script_uuid + " /* ShellScript */ = {\nisa = PBXShellScriptBuildPhase;\nbuildActionMask = 2147483647;\nfiles = (\n);\ninputPaths = (\n);\noutputPaths = (\n);\nrunOnlyForDeploymentPostprocessing = 0;\nshellPath = /bin/sh;\nshellScript = \"../../Frameworks/Crashlytics.framework/run #{token}\";\n};\n"
-    Modifier.add_shell_script(shell_script, @src)
+    shell_script = "#{sdk_path}/Crashlytics.framework/run #{token}"
 
-    target = " /* Frameworks */,\n\t\t\t);"
-    build_phases = " /* Frameworks */,\n\t\t\t" + shell_script_uuid + " /* ShellScript */,\n\t\t\t);"
-    @src.gsub!(target, build_phases)
+    Modifier.add_shell_script(@src, shell_script, new_uuid)
 
     add_block_after "buildSettings = {", "FRAMEWORK_SEARCH_PATHS = #{sdk_path};"
   end

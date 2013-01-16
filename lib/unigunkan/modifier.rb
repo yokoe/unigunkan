@@ -32,8 +32,14 @@ class Modifier
     src.gsub(line, line + "\n" + block)
   end
 
-  def self.add_shell_script(src, file)
+  def self.add_shell_script(src, script, uuid)
     target = "/* Begin PBXShellScriptBuildPhase section */\n"
-    return file.gsub!(target, target + src)
+    shell_script = uuid + " /* ShellScript */ = {\nisa = PBXShellScriptBuildPhase;\nbuildActionMask = 2147483647;\nfiles = (\n);\ninputPaths = (\n);\noutputPaths = (\n);\n
+      runOnlyForDeploymentPostprocessing = 0;\nshellPath = /bin/sh;\nshellScript = \"" + script + "\";\n};\n"
+    src.gsub!(target, target + shell_script)
+
+    target = " /* Frameworks */,\n\t\t\t);"
+    build_phases = " /* Frameworks */,\n\t\t\t" + uuid + " /* ShellScript */,\n\t\t\t);"
+    src.gsub!(target, build_phases)
   end
 end
