@@ -16,7 +16,7 @@ opt.on('--testflight-enable-remote-logging') {|v| OPTS[:testflight_enable_remote
 opt.on('--enable-objc-exceptions') {|v| OPTS[:enable_objc_exceptions] = v}
 opt.on('--integrate-crashlytics-sdk') {|v| OPTS[:integrate_crashlytics_sdk] = v}
 opt.on('--crashlytics-sdk VAL') {|v| OPTS[:crashlytics_sdk] = v}
-opt.on('--crashlytics-application-token VAL') {|v| OPTS[:crashlytics_application_token] = v}
+opt.on('--crashlytics-token VAL') {|v| OPTS[:crashlytics_token] = v}
 opt.parse!(ARGV)
 
 input = ARGV[0]
@@ -46,10 +46,10 @@ end
 
 
 if OPTS[:integrate_crashlytics_sdk] == true
-  if OPTS[:crashlytics_sdk] == nil || OPTS[:crashlytics_application_token] == nil
+  if OPTS[:crashlytics_sdk] == nil || OPTS[:crashlytics_token] == nil
     STDERR.puts "To integrate Crashlytics sdk, please set params below."
     STDERR.puts "--crashlytics-sdk /path/to/sdk"
-    STDERR.puts "--crashlytics-application-token 123456"
+    STDERR.puts "--crashlytics-token 123456"
     exit false
   end
 end
@@ -70,7 +70,7 @@ processor.enable_objc_exceptions if OPTS[:enable_objc_exceptions]
 processor.add_folder_refs
 
 if OPTS[:integrate_crashlytics_sdk] == true
-  processor.integrate_crashlytics_sdk OPTS[:crashlytics_sdk], OPTS[:crashlytics_application_token]
+  processor.integrate_crashlytics_sdk OPTS[:crashlytics_sdk], OPTS[:crashlytics_token]
 end
 
 if OPTS[:integrate_testflight_sdk] == true
