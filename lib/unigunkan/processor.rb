@@ -118,6 +118,13 @@ class Unigunkan::Processor
       @src = Modifier.add_framework_build_phase(@src, fileref.build_file.key)
       @src = Modifier.add_library_search_paths(@src, "\"\\\"#{path}\\\"\",")
       @src = Modifier.add_file_to_tree(@src, fileref.key + ",")
+    when "framework"
+      fileref = FileRef.new({name: library, last_known_type: "wrapper.framework", path: "#{path}/#{library}", source_tree: "\"<group>\""})
+      @src = Modifier.add_build_files(@src, fileref.build_file.to_s)
+      @src = Modifier.add_file_ref(@src, fileref.to_s)
+      @src = Modifier.add_framework_build_phase(@src, fileref.build_file.key)
+      @src = Modifier.add_library_search_paths(@src, "\"\\\"#{path}\\\"\",")
+      @src = Modifier.add_file_to_tree(@src, fileref.key + ",")
     else
       puts "Unsupported: #{library}"
     end
