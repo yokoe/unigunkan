@@ -44,6 +44,17 @@ To enable remote logging, specify `--testflight-enable-remote-logging`
         --testflight-sdk ~/Downloads/testflight --testflight-application-token 12345-abc-123\
         --testflight-enable-remote-logging
 ````
+
+#### Crashlytics SDK Integration
+
+1. Integrate the latest crashlytics with some project SDK using Crashlytics for Mac.
+2. Copy your token and Crashlytics.framework to some directory.
+3. Run unigunkan with --integrate-crashlytics-sdk option.
+
+````
+    $ unigunkan /path/to/project/Unity-iPhone.xcodeproj --integrate-crashlytics-sdk\
+        --crashlytics-sdk ~/Documents/CrashlyticsSDK/ --crashlytics-token 12345
+````
     
 ## Contributing
 
